@@ -66,6 +66,17 @@ class Hand(val cards: List<Card>, val bet: Int) {
         return HandType.HIGH_CARD
     }
 
+    fun jokerType(): HandType {
+        var bestType = HandType.HIGH_CARD
+        val replaceTypes = Card.entries.filterNot { it == Card.J }
+        for (cardType in replaceTypes) {
+            val newHand = Hand(cards.map { if (it == Card.J) cardType else it }, bet)
+            val type = newHand.type()
+            if (type.rank > bestType.rank) bestType = type
+        }
+        return bestType
+    }
+
     override fun equals(other: Any?): Boolean {
         val otherHand = other as Hand
         return otherHand.cards.size == this.cards.size && otherHand.cards.containsAll(this.cards)
@@ -84,4 +95,16 @@ val HandComparator = Comparator<Hand> { first, second ->
         }
     }
     return@Comparator first.type().compareTo(second.type())
+}
+
+val JokerHandComparator = Comparator<Hand> { first, second ->
+    if (first.jokerType().compareTo(second.jokerType()) == 0) {
+        first.cards.forEachIndexed() { index, card ->
+            val editedStrengthFirst = if(card == Card.J) 1 else card.strength
+            val editedStrengthSecond = if(second.cards[index] == Card.J) 1 else second.cards[index].strength
+            val comparedStrength = editedStrengthSecond.compareTo(editedStrengthFirst)
+            if (comparedStrength != 0) return@Comparator comparedStrength
+        }
+    }
+    return@Comparator first.jokerType().compareTo(second.jokerType())
 }

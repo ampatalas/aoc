@@ -41,4 +41,29 @@ class Day7Test {
         assertEquals(expectedRankedHands, rankedHands)
     }
 
+    @Test
+    fun sortJokerHands() {
+        val parser = Parser()
+        val hands = listOf(
+            "32T3K 1",
+            "T55J5 1",
+            "KK677 1",
+            "KTJJT 1",
+            "QQQJA 1"
+        )
+
+        val expectedRankedHands = listOf(
+            "KTJJT 1",
+            "QQQJA 1",
+            "T55J5 1",
+            "KK677 1",
+            "32T3K 1"
+        ).map { parser.toHand(it) }
+
+        val parsedHands = hands.map { parser.toHand(it) }
+        val rankedHands = parsedHands.sortedWith(JokerHandComparator)
+
+        assertEquals(expectedRankedHands, rankedHands)
+    }
+
 }
