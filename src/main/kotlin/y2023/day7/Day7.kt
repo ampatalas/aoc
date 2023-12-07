@@ -76,23 +76,6 @@ class Hand(val cards: List<Card>, val bet: Int) {
     }
 }
 
-fun compareGroups(first: Map<Int, List<Card>>, second: Map<Int, List<Card>>): Int {
-    if (first.size != second.size) {
-        return first.size.compareTo(second.size)
-    }
-    val biggestGroupInOneSize = first.maxBy { entry -> entry.value.size }
-    val biggestGroupInTwoSize = second.maxBy { entry -> entry.value.size }
-    if (biggestGroupInOneSize.value.size != biggestGroupInTwoSize.value.size) {
-        return biggestGroupInTwoSize.value.size.compareTo(biggestGroupInOneSize.value.size)
-    }
-    if (biggestGroupInTwoSize.key.compareTo(biggestGroupInOneSize.key) != 0) {
-        return biggestGroupInTwoSize.key.compareTo(biggestGroupInOneSize.key)
-    }
-    val reducedFirst = first.filterNot { it.key == biggestGroupInOneSize.key }
-    val reducedSecond = second.filterNot { it.key == biggestGroupInTwoSize.key }
-    return compareGroups(reducedFirst, reducedSecond)
-}
-
 val HandComparator = Comparator<Hand> { first, second ->
     if (first.type().compareTo(second.type()) == 0) {
         first.cards.forEachIndexed() { index, card ->
