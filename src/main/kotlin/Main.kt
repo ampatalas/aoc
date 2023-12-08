@@ -1,22 +1,14 @@
-import y2023.day7.Hand
-import y2023.day7.JokerHandComparator
-import y2023.day7.Parser
+import y2023.day8.Day8
 
 fun main(args: Array<String>) {
     println("Hello World!")
 
-    val handsAsLines = object {}.javaClass.getResourceAsStream("day7.txt")!!.bufferedReader().readLines()
-    val parser = Parser()
+    val lines = object {}.javaClass.getResourceAsStream("day8.txt")!!.bufferedReader().readLines()
+    val day8 = Day8()
+    val desertMap = day8.parse(lines)
+    val numberOfSteps = day8.getToTheEnd(desertMap.first, desertMap.second)
 
-    val hands = handsAsLines.map { parser.toHand(it) }.sortedWith(JokerHandComparator)
-    var sum = 0
-
-    hands.forEachIndexed { index: Int, hand: Hand ->
-        val rank = hands.size - index
-        sum += hand.bet * rank
-    }
-
-    println(sum)
+    println(numberOfSteps)
 
     println("Program arguments: ${args.joinToString()}")
 }
